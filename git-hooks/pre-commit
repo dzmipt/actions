@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# Install into git hooks folder with the following command
+# ln -s pre-commit ../.git/hooks/pre-commit
+#
+# This is to increment version
+
+awk -F. -v OFS=. '{$NF++;print}' version.txt >version.txt.tmp && mv version.txt.tmp version.txt
+git add version.txt
+date "+%Y.%m.%d %H:%M:%S" > date.txt
+git add date.txt
+
