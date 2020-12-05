@@ -5,7 +5,16 @@
 #
 # This is to increment version
 
-awk -F. -v OFS=. '{$NF++;print}' version.txt >version.txt.tmp && mv version.txt.tmp version.txt
+VERSION=`cat version.txt`
+VERSION_NODE_COUNT=$(echo $VERSION | awk -F. '{print NF}')
+BRANCH_NAME=`git rev-parse --abbrev-ref HEAD`
+
+if [[ $BRANCH_NAME != 'master' && $VERSION_NODE_COUNT = 3 ]]
+then
+   VERSION=$VERSION.0
+fi
+
+echo $VERISON | awk -F. -v OFS=. '{$NF++;print}' >version.txt
 git add version.txt
 date "+%Y.%m.%d %H:%M:%S" > date.txt
 git add date.txt
