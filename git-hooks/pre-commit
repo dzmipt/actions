@@ -14,7 +14,7 @@ then
    VERSION=$VERSION.0
 fi
 
-echo $VERISON | awk -F. -v OFS=. '{$NF++;print}' >version.txt
+echo $VERSION | awk -F. -v OFS=. '{$NF++;print}' >version.txt
 git add version.txt
 date "+%Y.%m.%d %H:%M:%S" > date.txt
 git add date.txt
