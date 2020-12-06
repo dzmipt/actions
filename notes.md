@@ -1,4 +1,4 @@
-`dz1.5` 2020.12.04
+`dz1.6` 2020.12.04
 -----
 * Customization of output format with comma thousands separator
 * Bugfix for not starting Studio without config file
