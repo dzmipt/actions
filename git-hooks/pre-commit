@@ -3,19 +3,34 @@
 # Install into git hooks folder with the following command
 # ln -s `pwd`/pre-commit ../.git/hooks/pre-commit
 #
-# This is to increment version
+# This is to automaticaly create tag if a new version is added at the top
+# Format of the tag is v.<version>
+# The first line of notes.md is parsed based on the following pattern
+# `<version>` the rest
+#
+# .git/config is recommended as ameneded to push local tags with git push
+# [remote "origin"]
+#         url = ...
+#         fetch = ...
+#         push = +refs/heads/*
+#         push = +refs/tags/*
 
-VERSION=`cat version.txt`
-VERSION_NODE_COUNT=$(echo $VERSION | awk -F. '{print NF}')
-BRANCH_NAME=`git rev-parse --abbrev-ref HEAD`
 
-if [[ $BRANCH_NAME != 'master' && $VERSION_NODE_COUNT = 3 ]]
-then
-   VERSION=$VERSION.0
+LINE=$(head -n 1 notes.md)
+echo "line: $LINE"
+REGEX='`(.*)`.*'
+if [[ $LINE =~ $REGEX ]] 
+then 
+   VERSION=${BASH_REMATCH[1]}  
+   echo "VERSION $VERSION"
+   TAG="v.$VERSION"
+   if ! git rev-parse $TAG >/dev/null 2>&1
+   then
+       echo "tag not found"
+       git tag $TAG
+   else
+       echo "tag found"
+   fi
 fi
 
-echo $VERSION | awk -F. -v OFS=. '{$NF++;print}' >version.txt
-git add version.txt
-date "+%Y.%m.%d %H:%M:%S" > date.txt
-git add date.txt
 

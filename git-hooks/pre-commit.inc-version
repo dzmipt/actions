@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# Install into git hooks folder with the following command
+# ln -s `pwd`/pre-commit ../.git/hooks/pre-commit
+#
+# This is to increment version
+
+VERSION=`cat version.txt`
+VERSION_NODE_COUNT=$(echo $VERSION | awk -F. '{print NF}')
+BRANCH_NAME=`git rev-parse --abbrev-ref HEAD`
+
+if [[ $BRANCH_NAME != 'master' && $VERSION_NODE_COUNT = 3 ]]
+then
+   VERSION=$VERSION.0
+fi
+
+echo $VERSION | awk -F. -v OFS=. '{$NF++;print}' >version.txt
+git add version.txt
+date "+%Y.%m.%d %H:%M:%S" > date.txt
+git add date.txt
+
